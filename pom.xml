@@ -1,8 +1,34 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>JustDesserts</groupId>
+  <groupId>com.github.ComaWell</groupId>
   <artifactId>JustDesserts</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
+  <packaging>jar</packaging>
+  
+  <name>JustDesserts</name>
+  <description>An end-user focused middleman for serializing and deserializing Java Objects to and from primitive data structures</description>
+  <url>https://github.com/ComaWell/JustDesserts</url>
+  
+  <licenses>
+  	<license>
+  		<name>Unlicense</name>
+  		<url>https://unlicense.org/</url>
+  		<distribution>repo</distribution>
+  	</license>
+  </licenses>
+  
+  <developers>
+  	<developer>
+  		<name>Connor Wellington</name>
+  		<email>connor.matthew.wellington@gmail.com</email>
+  	</developer>
+  </developers>
+  
+  <scm>
+  	<connection>scm:git:git://github.com/ComaWell/JustDesserts.git</connection>
+  	<url>https://github.com/ComaWell/JustDesserts/tree/master</url>
+  </scm>
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
