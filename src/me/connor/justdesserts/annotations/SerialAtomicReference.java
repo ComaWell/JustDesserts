@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(FIELD)
-public @interface SerialOptional {
+public @interface SerialAtomicReference {
+
+	public Class<?> referenceType();
 	
 }

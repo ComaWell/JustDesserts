@@ -1,6 +1,7 @@
 package me.connor.justdesserts;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.*;
 import java.util.stream.*;
 
@@ -103,6 +104,15 @@ public class SerialHandlers {
 								Map::putAll
 								)
 						);
+	}
+	
+	public static <S, D, R extends AtomicReference<S>> SerialHandler<R, D> atomicReferenceHandler(@Nonnull SerialHandler<S, D> handler) {//Test
+		Assert.notNull(handler);
+		return SerialHandler.from(
+				(Class<R>) AtomicReference.class,
+				(r) -> handler.serialize(r.get()),
+				(d) -> (R) new AtomicReference<S>(handler.deserialize(d))
+				);
 	}
 	
 }

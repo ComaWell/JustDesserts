@@ -121,4 +121,5 @@ public class SerialUtils {
 			throw new SerialException("Class Artifact is not a String");
 		}
 	}
+	
 }
