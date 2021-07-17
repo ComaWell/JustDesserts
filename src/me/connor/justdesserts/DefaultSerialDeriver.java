@@ -1,7 +1,9 @@
 package me.connor.justdesserts;
 
+import java.lang.ref.Reference;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.*;
 import java.util.stream.*;
 
@@ -92,6 +94,10 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 											}
 										}
 												
+									}
+									else if (AtomicReference.class.equals(type)) {
+										SerialAtomicReference anno = f.getAnnotation(SerialAtomicReference.class);
+										if (anno != null) return SerialHandlers.atomicReferenceHandler(derive(anno.referenceType()));
 									}
 									return derive(type);
 								} catch (Throwable t) {

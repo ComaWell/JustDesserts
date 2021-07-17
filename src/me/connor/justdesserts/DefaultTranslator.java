@@ -18,7 +18,8 @@ public class DefaultTranslator extends DefaultSerialDeriver implements Translato
 	@Override
 	public <U, K> U deserialize(@Nonnull Class<U> serialType, @Nullable K data) throws IllegalArgumentException, SerialException {
 		Assert.notNull(serialType);
-		return data == null ? null : derive(serialType).deserialize(data);
+		return data == null ? null : data.getClass().equals(serialType) ? (U) data : derive(serialType).deserialize(data);
+																	//  ^ TODO: theoretically prevents double-feeding an Object from causing an issue, but needs testing
 	}
 
 }
