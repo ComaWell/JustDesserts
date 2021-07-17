@@ -106,12 +106,13 @@ public class SerialHandlers {
 						);
 	}
 	
-	public static <S, D, R extends AtomicReference<S>> SerialHandler<R, D> atomicReferenceHandler(@Nonnull SerialHandler<S, D> handler) {//Test
+	@SuppressWarnings("rawtypes")
+	public static <S, D> SerialHandler<AtomicReference, D> atomicReferenceHandler(@Nonnull SerialHandler<S, D> handler) {
 		Assert.notNull(handler);
 		return SerialHandler.from(
-				(Class<R>) AtomicReference.class,
-				(r) -> handler.serialize(r.get()),
-				(d) -> (R) new AtomicReference<S>(handler.deserialize(d))
+				AtomicReference.class,
+				(r) -> handler.serialize((S) r.get()),
+				(d) -> new AtomicReference<S>(handler.deserialize(d))
 				);
 	}
 	
