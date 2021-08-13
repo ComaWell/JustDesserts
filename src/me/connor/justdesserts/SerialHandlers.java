@@ -42,7 +42,7 @@ public class SerialHandlers {
 		Assert.allNotNull(handler, serialGenerator, dataGenerator);
 		checkNotArray(handler.serialType());
 		return SerialHandler.from(
-				(Class<S[]>) handler.getClass().arrayType(),
+				(Class<S[]>) handler.serialType().arrayType(),
 				(array) -> Arrays.stream(array)
 				.map(handler::serialize)
 				.toArray(dataGenerator),
@@ -57,7 +57,7 @@ public class SerialHandlers {
 		Assert.notNull(handler);
 		checkNotArray(handler.serialType());
 		return SerialHandler.from(
-				(Class<Object[]>) handler.getClass().arrayType(),
+				(Class<Object[]>) handler.serialType().arrayType(),
 				(array) -> Arrays.stream(array)
 				.map(handler::serialize)
 				.toArray(),
