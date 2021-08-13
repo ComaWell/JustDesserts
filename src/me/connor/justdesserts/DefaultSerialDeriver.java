@@ -1,6 +1,5 @@
 package me.connor.justdesserts;
 
-import java.lang.ref.Reference;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -63,7 +62,7 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 		
 		else {//The actual deriving can begin
 			Supplier<U> supplier = deriveSupplier(serialType);
-			Map<Field, SerialHandler> fields = SerialUtils.getFields(serialType).stream()
+			Map<Field, SerialHandler> fields = SerialUtils.getFields(serialType).parallelStream()
 					.collect(Collectors.toMap(
 							(f) -> f,
 							(f) -> {
