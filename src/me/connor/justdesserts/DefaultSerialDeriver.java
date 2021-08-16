@@ -43,11 +43,15 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 		
 		try {
 			handler = SerialHandler.forClass(serialType);
+			handlers.put(serialType, handler);
+			return handler;	
 		} catch (NoSerialHandlerException unused) {
 			
 		}
 		try {
 			handler = PartialSerialHandler.forClass(serialType).create(this);
+			handlers.put(serialType, handler);
+			return handler;	
 		} catch (NoSerialHandlerException unused) {
 			
 		}
