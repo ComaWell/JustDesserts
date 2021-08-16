@@ -56,11 +56,12 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 			
 		}
 		
-		validateType(serialType);
 		if (serialType.isEnum()) handler = SerialHandlers.enumHandler((Class<Enum>) serialType);
-		//else if (serialType.isArray()) handler = SerialHandlers.arrayHandler(derive(serialType.getComponentType()), null, null);//TODO: Make this work
+		else if (serialType.isArray()) handler = SerialHandlers.anonymousArrayHandler(derive(serialType.getComponentType()));//TODO: Make this work
+		
 		
 		else {//The actual deriving can begin
+			validateType(serialType);
 			Supplier<U> supplier = deriveSupplier(serialType);
 			Map<Field, SerialHandler> fields = SerialUtils.getFields(serialType).parallelStream()
 					.collect(Collectors.toMap(
