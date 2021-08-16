@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.ComaWell</groupId>
   <artifactId>JustDesserts</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.4</version>
   <packaging>jar</packaging>
   
   <name>JustDesserts</name>
