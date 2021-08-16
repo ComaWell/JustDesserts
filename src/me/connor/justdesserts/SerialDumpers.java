@@ -34,17 +34,6 @@ public class SerialDumpers {
 				);
 	}
 	
-	public static <S> SerialHandler<Collection<S>, Collection<Object>> collectionHandler(@Nonnull SerialHandler<S, ?> handler) {
-		Assert.notNull(handler);
-		return SerialHandler.from(
-				(Class<Collection<S>>) new ArrayList<S>().getClass(),//TODO: Kind of weird
-				(collection) -> collection.isEmpty() ? Collections.EMPTY_LIST : collection.parallelStream()
-						.map(handler::serialize)
-						.collect(Collectors.toList()),
-				SerialDumper::deserializer
-				);
-	}
-	
 	@SuppressWarnings("rawtypes")
 	public static SerialDeriver<Collection, Collection> collectionDeriver(@Nonnull SerialDumper dumper) {
 		Assert.notNull(dumper);
@@ -57,21 +46,6 @@ public class SerialDumpers {
 								.collect(Collectors.toList()),
 						SerialDumper::deserializer
 						)
-				);
-	}
-	
-	public static <SK, SV> SerialHandler<Map<SK, SV>, Map<Object, Object>> mapHandler(@Nonnull SerialHandler<SK, ?> keyHandler, @Nonnull SerialHandler<SV, ?> valueHandler) {
-		Assert.allNotNull(keyHandler, valueHandler);
-		return SerialHandler.from(
-				(Class<Map<SK, SV>>) new LinkedHashMap<SK, SV>().getClass(),
-				(map) -> map.isEmpty() ? Collections.EMPTY_MAP : map.entrySet()
-						.stream()
-						.collect(
-								LinkedHashMap::new,
-								(m, e) -> m.put(keyHandler.serialize(e.getKey()), valueHandler.serialize(e.getValue())),
-								LinkedHashMap::putAll
-								),
-				SerialDumper::deserializer
 				);
 	}
 	
