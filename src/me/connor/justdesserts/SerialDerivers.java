@@ -1,7 +1,5 @@
 package me.connor.justdesserts;
 
-import java.util.function.*;
-
 import me.connor.util.*;
 
 public class SerialDerivers {
@@ -17,20 +15,11 @@ public class SerialDerivers {
 			SerialHandlers::enumHandler
 			);
 
-	public static <S, D> SerialDeriver<S[], D[]> arrayDeriver(@Nonnull SerialDeriver<S, D> deriver, @Nonnull IntFunction<S[]> serialGenerator, @Nonnull IntFunction<D[]> deserialGenerator) {
-		Assert.allNotNull(deriver, serialGenerator, deserialGenerator);
+	public static <S, D> SerialDeriver<S[], Object[]> arrayDeriver(@Nonnull SerialDeriver<S, D> deriver) {
+		Assert.allNotNull(deriver);
 		return SerialDeriver.from(
 				(c) -> c.isArray() && deriver.accepts(c.componentType()),
-				(c) -> SerialHandlers.arrayHandler(deriver.derive((Class<S>) c), serialGenerator, deserialGenerator)//TODO: Test
-				);
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public static SerialDeriver<Object[], Object[]> anonymousArrayDeriver(@Nonnull SerialDeriver deriver) {
-		Assert.notNull(deriver);
-		return SerialDeriver.from(
-				(c) -> c.isArray() && deriver.accepts(c.componentType()),
-				(c) -> SerialHandlers.anonymousArrayHandler(deriver.derive(c))
+				(c) -> SerialHandlers.arrayHandler(deriver.derive((Class<S>) c))//TODO: Test
 				);
 	}
 	

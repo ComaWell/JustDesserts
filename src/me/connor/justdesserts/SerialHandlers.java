@@ -39,20 +39,6 @@ public class SerialHandlers {
 				);
 	}
 	
-	public static <S, D> SerialHandler<S[], D[]> arrayHandler(@Nonnull SerialHandler<S, D> handler, @Nonnull IntFunction<S[]> serialGenerator, @Nonnull IntFunction<D[]> dataGenerator) {
-		Assert.allNotNull(handler, serialGenerator, dataGenerator);
-		checkNotArray(handler.serialType());
-		return SerialHandler.from(
-				(Class<S[]>) handler.serialType().arrayType(),
-				(array) -> Arrays.stream(array)
-				.map(handler::serialize)
-				.toArray(dataGenerator),
-				(data) -> Arrays.stream(data)
-				.map(handler::deserialize)
-				.toArray(serialGenerator)
-				);
-	}
-	
 	private static <T> T[] createArray(@Nonnull Class<T> type, int length) {
 		Assert.notNull(type);
 		checkNotArray(type);
@@ -70,21 +56,6 @@ public class SerialHandlers {
 				(data) -> Arrays.stream(data)
 				.map((o) -> handler.deserialize((D) o))
 				.toArray((i) -> createArray(handler.serialType(), i))
-				);
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public static SerialHandler<Object[], Object[]> anonymousArrayHandler(@Nonnull SerialHandler handler) {
-		Assert.notNull(handler);
-		checkNotArray(handler.serialType());
-		return SerialHandler.from(
-				(Class<Object[]>) handler.serialType().arrayType(),
-				(array) -> Arrays.stream(array)
-				.map(handler::serialize)
-				.toArray(),
-				(data) -> Arrays.stream(data)
-				.map(handler::deserialize)
-				.toArray()
 				);
 	}
 	

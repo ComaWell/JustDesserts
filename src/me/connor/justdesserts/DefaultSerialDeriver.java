@@ -61,7 +61,7 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 		else {//The actual deriving can begin
 			validateType(serialType);
 			Supplier<U> supplier = deriveSupplier(serialType);
-			Map<Field, SerialHandler> fields = SerialUtils.getFields(serialType).parallelStream()
+			Map<Field, SerialHandler> fields = SerialUtils.getFields(serialType).stream()
 					.collect(Collectors.toMap(
 							(f) -> f,
 							(f) -> {
