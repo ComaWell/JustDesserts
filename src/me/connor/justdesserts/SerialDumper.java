@@ -16,6 +16,10 @@ public final class SerialDumper implements Translator<Object, Object> {
 	
 	@SuppressWarnings("rawtypes")
 	private final HashMap<Class, SerialHandler> handlers = new HashMap<>();
+	
+	public SerialDumper() {
+		handlers.putAll(SerialDumpers.PRIMITIVE_HANDLERS);
+	}
 
 	@Override
 	public boolean accepts(@Nonnull Class<?> type) {//TODO: Theoretically this can derive *nearly* anything, so if it tests well this might just be able to return true
@@ -35,30 +39,22 @@ public final class SerialDumper implements Translator<Object, Object> {
 			SerialHandler handler;
 			
 			try {
-				handler = SerialHandler.forClass(serialType).prepend(SerialHandler.from(//Wrapping a declared SerialHandler to not be Deserializable (for consistency's sake)
-						serialType,
-						(o) -> o,
-						SerialDumper::deserializer
-						));
+				handler = SerialDumpers.dumpWrapper(SerialHandler.forClass(serialType));
 				handlers.put(serialType, handler);
 				return handler;
 			} catch (NoSerialHandlerException unused) { }
 			try {
-				handler = PartialSerialHandler.forClass(serialType).create(this).prepend(SerialHandler.from(//Wrapping a declared PartialSerialHandler to not be Deserializable (for consistency's sake)
-						serialType,
-						(o) -> o,
-						SerialDumper::deserializer
-						));
+				handler = SerialDumpers.dumpWrapper(PartialSerialHandler.forClass(serialType).create(this));
 				handlers.put(serialType, handler);
 				return handler;
 			} catch (NoSerialHandlerException unused) { }
 			
-			validateType(serialType);
 			if (serialType.isEnum()) handler = SerialDumpers.enumHandler((Class<Enum>) serialType);
 			else if (serialType.isArray()) handler = SerialDumpers.arrayHandler(derive(serialType.getComponentType()));
 			else if (Collection.class.isAssignableFrom(serialType)) handler = collectionDeriver.derive((Class<Collection>) serialType);
 			else if (Map.class.isAssignableFrom(serialType)) handler = mapDeriver.derive((Class<Map>) serialType);
 			else {
+				validateType(serialType);
 				Set<Field> fields = SerialUtils.getFields(serialType);
 				for (Field f : fields) f.trySetAccessible();
 				if (fields.size() == 0) ;//TODO: Still don't know what to do here.

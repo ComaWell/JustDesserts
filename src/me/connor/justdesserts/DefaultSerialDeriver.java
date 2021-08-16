@@ -57,7 +57,7 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 		}
 		
 		if (serialType.isEnum()) handler = SerialHandlers.enumHandler((Class<Enum>) serialType);
-		else if (serialType.isArray()) handler = SerialHandlers.anonymousArrayHandler(derive(serialType.getComponentType()));//TODO: Make this work
+		else if (serialType.isArray()) handler = SerialHandlers.arrayHandler(derive(serialType.getComponentType()));
 		
 		
 		else {//The actual deriving can begin

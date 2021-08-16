@@ -1,12 +1,25 @@
 package me.connor.justdesserts;
 
 import java.util.*;
-import java.util.function.*;
 import java.util.stream.*;
 
 import me.connor.util.*;
 
 public class SerialDumpers {
+	
+	public static final Map<Class<?>, SerialHandler<?, ?>> PRIMITIVE_HANDLERS = SerialHandlers.PRIMITIVE_HANDLERS.entrySet()
+			.stream()
+			.map((e) -> Map.entry(e.getKey(), dumpWrapper(e.getValue())))
+			.collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+	
+	public static <S, D> SerialHandler<S, D> dumpWrapper(@Nonnull SerialHandler<S, D> handler) {
+		Assert.notNull(handler);
+		return handler.prepend(SerialHandler.from(
+				handler.serialType(),
+				(o) -> o,
+				SerialDumper::deserializer
+				));
+	}
 
 	public static <S extends Enum<S>> SerialHandler<S, String> enumHandler(@Nonnull Class<S> enumClass) {
 		Assert.notNull(enumClass);

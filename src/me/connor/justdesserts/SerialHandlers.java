@@ -1,5 +1,6 @@
 package me.connor.justdesserts;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.*;
@@ -49,6 +50,26 @@ public class SerialHandlers {
 				(data) -> Arrays.stream(data)
 				.map(handler::deserialize)
 				.toArray(serialGenerator)
+				);
+	}
+	
+	private static <T> T[] createArray(@Nonnull Class<T> type, int length) {
+		Assert.notNull(type);
+		checkNotArray(type);
+		return (T[]) Array.newInstance(type, length);
+	}
+	
+	public static <S, D> SerialHandler<S[], Object[]> arrayHandler(@Nonnull SerialHandler<S, D> handler) {
+		Assert.notNull(handler);
+		checkNotArray(handler.serialType());
+		return SerialHandler.from(
+				(Class<S[]>) handler.serialType().arrayType(),
+				(array) -> Arrays.stream(array)
+				.map(handler::serialize)
+				.toArray(),
+				(data) -> Arrays.stream(data)
+				.map((o) -> handler.deserialize((D) o))
+				.toArray((i) -> createArray(handler.serialType(), i))
 				);
 	}
 	
