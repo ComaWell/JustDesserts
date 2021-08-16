@@ -43,23 +43,17 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 		
 		try {
 			handler = SerialHandler.forClass(serialType);
-			handlers.put(serialType, handler);//TODO: I don't like repeating code here. Rework this later
-			return handler;
 		} catch (NoSerialHandlerException unused) {
 			
 		}
 		try {
 			handler = PartialSerialHandler.forClass(serialType).create(this);
-			handlers.put(serialType, handler);//TODO: Here too
-			return handler;
 		} catch (NoSerialHandlerException unused) {
 			
 		}
 		
 		if (serialType.isEnum()) handler = SerialHandlers.enumHandler((Class<Enum>) serialType);
 		else if (serialType.isArray()) handler = SerialHandlers.arrayHandler(derive(serialType.getComponentType()));
-		
-		
 		else {//The actual deriving can begin
 			validateType(serialType);
 			Supplier<U> supplier = deriveSupplier(serialType);
@@ -106,7 +100,7 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 							}
 							));
 			
-			if (fields.size() == 0) ;//TODO: What to do in this case? Would this ever feasibly occur without something being wrong with either the Object or the SerialDeriver?
+			if (fields.size() == 0) throw new IllegalArgumentException("Cannot Serialize an Object with no Fields");
 			
 			/* If there is only a single Serializable Field in an Object, then the Object could just as easily be represented as just the contents of that Field, rather
 			 * than a Map with a single entry of the contents of the Field. Functionally this makes little difference, however given that the goal of SerialHandlers
@@ -186,8 +180,8 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 						});
 						return obj;
 					});
-			handlers.put(serialType, handler);
 		}
+		handlers.put(serialType, handler);
 		return handler;	
 	}
 	
