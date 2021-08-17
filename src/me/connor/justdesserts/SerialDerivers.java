@@ -1,5 +1,7 @@
 package me.connor.justdesserts;
 
+import java.util.*;
+
 import me.connor.util.*;
 
 public class SerialDerivers {
@@ -15,7 +17,7 @@ public class SerialDerivers {
 			SerialHandlers::enumHandler
 			);
 
-	public static <S, D> SerialDeriver<S[], Object[]> arrayDeriver(@Nonnull SerialDeriver<S, D> deriver) {
+	public static <S, D> SerialDeriver<S[], Collection<D>> arrayDeriver(@Nonnull SerialDeriver<S, D> deriver) {
 		Assert.allNotNull(deriver);
 		return SerialDeriver.from(
 				(c) -> c.isArray() && deriver.accepts(c.componentType()),
