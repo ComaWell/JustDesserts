@@ -39,24 +39,21 @@ public class SerialHandlers {
 				);
 	}
 	
-	private static <T> T[] createArray(@Nonnull Class<T> type, int length) {
+	private static <T> T[] createArray(@Nonnull Class<T> type) {
 		Assert.notNull(type);
 		checkNotArray(type);
-		return (T[]) Array.newInstance(type, length);
+		return (T[]) Array.newInstance(type, 0);
 	}
 	
-	public static <S, D> SerialHandler<S[], Object[]> arrayHandler(@Nonnull SerialHandler<S, D> handler) {
+	public static <S, D> SerialHandler<S[], Collection<D>> arrayHandler(@Nonnull SerialHandler<S, D> handler) {
 		Assert.notNull(handler);
 		checkNotArray(handler.serialType());
-		return SerialHandler.from(
+		return collectionHandler(handler, ArrayList::new).prepend(SerialHandler.from(
 				(Class<S[]>) handler.serialType().arrayType(),
 				(array) -> Arrays.stream(array)
-				.map(handler::serialize)
-				.toArray(),
-				(data) -> Arrays.stream(data)
-				.map((o) -> handler.deserialize((D) o))
-				.toArray((i) -> createArray(handler.serialType(), i))
-				);
+				.collect(Collectors.toCollection(ArrayList::new)),
+				(data) -> data.toArray(createArray(handler.serialType()))
+				));
 	}
 	
 	private static void checkNotArray(@Nonnull Class<?> cls) throws IllegalArgumentException {
