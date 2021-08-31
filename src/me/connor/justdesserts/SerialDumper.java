@@ -17,8 +17,10 @@ public final class SerialDumper implements Translator<Object, Object> {
 	@SuppressWarnings("rawtypes")
 	private final HashMap<Class, SerialHandler> handlers = new HashMap<>();
 	
-	public SerialDumper() {
-		handlers.putAll(SerialDumpers.PRIMITIVE_HANDLERS);
+	public SerialDumper(@Nonnull SerialHandler<?, ?>...handlers) {
+		Assert.notNull(handlers);
+		this.handlers.putAll(SerialDumpers.PRIMITIVE_HANDLERS);
+		for (SerialHandler<?, ?> h: handlers) addHandler(h);
 	}
 
 	@Override
@@ -105,6 +107,11 @@ public final class SerialDumper implements Translator<Object, Object> {
 	@Override
 	public <U, K> U deserialize(@Nonnull Class<U> serialType, @Nullable K data) throws UnsupportedOperationException {
 		throw unsupported();
+	}
+	
+	public void addHandler(@Nonnull SerialHandler<?, ?> handler) {//Note for docs: does not override any derived SerialHandler that already exists for the Handler's serialType
+		Assert.notNull(handler);
+		handlers.putIfAbsent(handler.serialType(), SerialDumpers.dumpWrapper(handler));
 	}
 	
 	static void validateType(@Nonnull Class<?> serialType) throws IllegalArgumentException {
