@@ -56,7 +56,6 @@ public final class SerialDumper implements Translator<Object, Object> {
 			else {
 				validateType(serialType);
 				Set<Field> fields = SerialUtils.getFields(serialType);
-				for (Field f : fields) f.trySetAccessible();
 				if (fields.size() == 0) ;//TODO: Still don't know what to do here.
 				
 				if (fields.size() == 1) {
@@ -65,6 +64,7 @@ public final class SerialDumper implements Translator<Object, Object> {
 							serialType,
 							(s) -> {
 								try {
+									if (!f.canAccess(s)) f.setAccessible(true);
 									return serialize(f.get(s));
 								} catch (IllegalAccessException e) {
 									throw new SerialException("Thrown for Field " + f.getName() + " in Class " + serialType.getCanonicalName(), e);
@@ -80,6 +80,7 @@ public final class SerialDumper implements Translator<Object, Object> {
 								LinkedHashMap::new,
 								(m, f) -> {
 									try {
+										if (!f.canAccess(s)) f.setAccessible(true);
 										m.put(f.getName(), serialize(f.get(s)));
 									} catch (IllegalAccessException e) {
 										throw new SerialException("Thrown for Field " + f.getName() + " in Class " + serialType.getCanonicalName(), e);
