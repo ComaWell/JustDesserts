@@ -68,7 +68,7 @@ public final class SerialDumper implements Translator<Object, Object> {
 								try {
 									if (!f.canAccess(s)) f.setAccessible(true);
 									return serialize(f.get(s));
-								} catch (IllegalAccessException e) {
+								} catch (IllegalAccessException | InaccessibleObjectException e) {
 									throw new SerialException("Thrown for Field " + f.getName() + " in Class " + serialType.getCanonicalName(), e);
 								}
 							},
@@ -84,7 +84,7 @@ public final class SerialDumper implements Translator<Object, Object> {
 									try {
 										if (!f.canAccess(s)) f.setAccessible(true);
 										m.put(f.getName(), serialize(f.get(s)));
-									} catch (IllegalAccessException e) {
+									} catch (IllegalAccessException | InaccessibleObjectException e) {
 										throw new SerialException("Thrown for Field " + f.getName() + " in Class " + serialType.getCanonicalName(), e);
 									}
 								},
@@ -92,9 +92,8 @@ public final class SerialDumper implements Translator<Object, Object> {
 								),
 						SerialDumper::deserializer
 						);
-				
-				handlers.put(serialType, handler);
 			}
+			handlers.put(serialType, handler);
 			return handler;
 		}
 	}
