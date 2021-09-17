@@ -33,4 +33,7 @@ public interface Translator<S, D> extends SerialDeriver<S, D> {
 	public static DefaultTranslator newDefault() {
 		return new DefaultTranslator();
 	}
+	
+	public static final DefaultTranslator GLOBAL_DEFAULT = newDefault();
+	
 }

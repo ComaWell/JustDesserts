@@ -10,24 +10,48 @@ import me.connor.util.*;
 
 public class SerialHandlers {
 	
+	public static final SerialHandler<Boolean, Boolean> BOOLEAN_HANDLER = SerialHandler.from(Boolean.class, (b) -> b, (b) -> b);
+	public static final SerialHandler<Boolean, Boolean> PRIM_BOOLEAN_HANDLER = SerialHandler.from(boolean.class, (b) -> b, (b) -> b);
+	public static final SerialHandler<Byte, Long> BYTE_HANDLER = SerialHandler.from(Byte.class, (b) -> Long.valueOf(b), (l) -> l.byteValue());
+	public static final SerialHandler<Byte, Long> PRIM_BYTE_HANDLER = SerialHandler.from(byte.class, (b) -> Long.valueOf(b), (l) -> l.byteValue());
+	public static final SerialHandler<Short, Long> SHORT_HANDLER = SerialHandler.from(Short.class, (s) -> Long.valueOf(s), (l) -> l.shortValue());
+	public static final SerialHandler<Short, Long> PRIM_SHORT_HANDLER = SerialHandler.from(short.class, (s) -> Long.valueOf(s), (l) -> l.shortValue());
+	public static final SerialHandler<Integer, Long> INTEGER_HANDLER = SerialHandler.from(Integer.class, (i) -> Long.valueOf(i), (l) -> l.intValue());
+	public static final SerialHandler<Integer, Long> PRIM_INTEGER_HANDLER = SerialHandler.from(int.class, (i) -> Long.valueOf(i), (l) -> l.intValue());
+	public static final SerialHandler<Long, Long> LONG_HANDLER = SerialHandler.from(Long.class, (l) -> l, (l) -> l);
+	public static final SerialHandler<Long, Long> PRIM_LONG_HANDLER = SerialHandler.from(long.class, (l) -> l, (l) -> l);
+	public static final SerialHandler<Float, Double> FLOAT_HANDLER = SerialHandler.from(Float.class, (f) -> Double.valueOf(f), (d) -> d.floatValue());
+	public static final SerialHandler<Float, Double> PRIM_FLOAT_HANDLER = SerialHandler.from(float.class, (f) -> Double.valueOf(f), (d) -> d.floatValue());
+	public static final SerialHandler<Double, Double> DOUBLE_HANDLER = SerialHandler.from(Double.class, (d) -> d, (d) -> d);
+	public static final SerialHandler<Double, Double> PRIM_DOUBLE_HANDLER = SerialHandler.from(double.class, (d) -> d, (d) -> d);
+	public static final SerialHandler<Character, String> CHARACTER_HANDLER = SerialHandler.from(Character.class, (c) -> c.toString(), (s) -> {
+		if (s.length() != 1) throw new IllegalArgumentException("Input is not the correct length to be a Character");
+		return s.charAt(0);
+	});
+	public static final SerialHandler<Character, String> PRIM_CHARACTER_HANDLER = SerialHandler.from(char.class, (c) -> c.toString(), (s) -> {
+		if (s.length() != 1) throw new IllegalArgumentException("Input is not the correct length to be a Character");
+		return s.charAt(0);
+	});
+	public static final SerialHandler<String, String> STRING_HANDLER = SerialHandler.from(String.class, (s) -> s, (s) -> s);
+	
 	public static final Map<Class<?>, SerialHandler<?, ?>> PRIMITIVE_HANDLERS = Map.ofEntries(
-			Map.entry(Boolean.class, 	SerialHandler.from(Boolean.class, 	(b) -> b.toString(), Boolean::valueOf)),
-			Map.entry(boolean.class, 	SerialHandler.from(boolean.class, 	(b) -> Boolean.toString(b), Boolean::valueOf)),
-			Map.entry(Byte.class, 		SerialHandler.from(Byte.class, 		(b) -> b.toString(), Byte::valueOf)),
-			Map.entry(byte.class, 		SerialHandler.from(byte.class, 		(b) -> Byte.toString(b), Byte::valueOf)),
-			Map.entry(Short.class, 		SerialHandler.from(Short.class, 	(s) -> s.toString(), Short::valueOf)),
-			Map.entry(short.class, 		SerialHandler.from(short.class, 	(s) -> Short.toString(s), Short::valueOf)),
-			Map.entry(Integer.class,	SerialHandler.from(Integer.class, 	(i) -> i.toString(), Integer::valueOf)),
-			Map.entry(int.class, 		SerialHandler.from(int.class, 		(i) -> Integer.toString(i), Integer::valueOf)),
-			Map.entry(Long.class, 		SerialHandler.from(Long.class, 		(l) -> l.toString(), Long::valueOf)),
-			Map.entry(long.class,		SerialHandler.from(long.class, 		(l) -> Long.toString(l), Long::valueOf)),
-			Map.entry(Float.class,		SerialHandler.from(Float.class, 	(f) -> f.toString(), Float::valueOf)),
-			Map.entry(float.class,		SerialHandler.from(float.class, 	(f) -> Float.toString(f), Float::valueOf)),
-			Map.entry(Double.class,		SerialHandler.from(Double.class, 	(d) -> d.toString(), Double::valueOf)),
-			Map.entry(double.class, 	SerialHandler.from(double.class, 	(d) -> Double.toString(d), Double::valueOf)),
-			Map.entry(Character.class, 	SerialHandler.from(Character.class, (c) -> c.toString(), (s) -> s.charAt(0))),//TODO: These Character Deserializers are not very good, make them better later
-			Map.entry(char.class, 		SerialHandler.from(char.class, 		(c) -> Character.toString(c), (s) -> s.charAt(0))),
-			Map.entry(String.class, 	SerialHandler.from(String.class, 	(o) -> o, (o) -> o))
+			Map.entry(Boolean.class, 	BOOLEAN_HANDLER),
+			Map.entry(boolean.class, 	PRIM_BOOLEAN_HANDLER),
+			Map.entry(Byte.class, 		BYTE_HANDLER),
+			Map.entry(byte.class, 		PRIM_BYTE_HANDLER),
+			Map.entry(Short.class, 		SHORT_HANDLER),
+			Map.entry(short.class, 		PRIM_SHORT_HANDLER),
+			Map.entry(Integer.class,	INTEGER_HANDLER),
+			Map.entry(int.class, 		PRIM_INTEGER_HANDLER),
+			Map.entry(Long.class, 		LONG_HANDLER),
+			Map.entry(long.class,		PRIM_LONG_HANDLER),
+			Map.entry(Float.class,		FLOAT_HANDLER),
+			Map.entry(float.class,		PRIM_FLOAT_HANDLER),
+			Map.entry(Double.class,		DOUBLE_HANDLER),
+			Map.entry(double.class, 	PRIM_DOUBLE_HANDLER),
+			Map.entry(Character.class,  CHARACTER_HANDLER),
+			Map.entry(char.class, 		PRIM_CHARACTER_HANDLER),
+			Map.entry(String.class, 	STRING_HANDLER)
 			);
 	
 	public static <S extends Enum<S>> SerialHandler<S, String> enumHandler(@Nonnull Class<S> enumClass) {

@@ -179,7 +179,7 @@ public class DefaultSerialDeriver implements SerialDeriver<Object, Object> {//TO
 								if (!f.canAccess(obj)) f.setAccessible(true);
 								f.set(obj, (v == null ? null : e.getValue().deserialize(v)));
 							} catch (Throwable t) {
-								throw new SerialException("An Exception occured when Deserializing Class " + serialType.getCanonicalName(), t);
+								throw new SerialException("An Exception occured when Deserializing Field " + f.getName() + " in Class " + serialType.getCanonicalName(), t);
 							}
 						});
 						return obj;
