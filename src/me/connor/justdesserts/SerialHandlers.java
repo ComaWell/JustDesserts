@@ -12,18 +12,18 @@ public class SerialHandlers {
 	
 	public static final SerialHandler<Boolean, Boolean> BOOLEAN_HANDLER = SerialHandler.from(Boolean.class, (b) -> b, (b) -> b);
 	public static final SerialHandler<Boolean, Boolean> PRIM_BOOLEAN_HANDLER = SerialHandler.from(boolean.class, (b) -> b, (b) -> b);
-	public static final SerialHandler<Byte, Long> BYTE_HANDLER = SerialHandler.from(Byte.class, (b) -> Long.valueOf(b), (l) -> l.byteValue());
-	public static final SerialHandler<Byte, Long> PRIM_BYTE_HANDLER = SerialHandler.from(byte.class, (b) -> Long.valueOf(b), (l) -> l.byteValue());
-	public static final SerialHandler<Short, Long> SHORT_HANDLER = SerialHandler.from(Short.class, (s) -> Long.valueOf(s), (l) -> l.shortValue());
-	public static final SerialHandler<Short, Long> PRIM_SHORT_HANDLER = SerialHandler.from(short.class, (s) -> Long.valueOf(s), (l) -> l.shortValue());
-	public static final SerialHandler<Integer, Long> INTEGER_HANDLER = SerialHandler.from(Integer.class, (i) -> Long.valueOf(i), (l) -> l.intValue());
-	public static final SerialHandler<Integer, Long> PRIM_INTEGER_HANDLER = SerialHandler.from(int.class, (i) -> Long.valueOf(i), (l) -> l.intValue());
-	public static final SerialHandler<Long, Long> LONG_HANDLER = SerialHandler.from(Long.class, (l) -> l, (l) -> l);
-	public static final SerialHandler<Long, Long> PRIM_LONG_HANDLER = SerialHandler.from(long.class, (l) -> l, (l) -> l);
-	public static final SerialHandler<Float, Double> FLOAT_HANDLER = SerialHandler.from(Float.class, (f) -> Double.valueOf(f), (d) -> d.floatValue());
-	public static final SerialHandler<Float, Double> PRIM_FLOAT_HANDLER = SerialHandler.from(float.class, (f) -> Double.valueOf(f), (d) -> d.floatValue());
-	public static final SerialHandler<Double, Double> DOUBLE_HANDLER = SerialHandler.from(Double.class, (d) -> d, (d) -> d);
-	public static final SerialHandler<Double, Double> PRIM_DOUBLE_HANDLER = SerialHandler.from(double.class, (d) -> d, (d) -> d);
+	public static final SerialHandler<Byte, Number> BYTE_HANDLER = SerialHandler.from(Byte.class, Number::longValue, Number::byteValue);
+	public static final SerialHandler<Byte, Number> PRIM_BYTE_HANDLER = SerialHandler.from(byte.class, Number::longValue, Number::byteValue);
+	public static final SerialHandler<Short, Number> SHORT_HANDLER = SerialHandler.from(Short.class, Number::longValue, Number::shortValue);
+	public static final SerialHandler<Short, Number> PRIM_SHORT_HANDLER = SerialHandler.from(short.class, Number::longValue, Number::shortValue);
+	public static final SerialHandler<Integer, Number> INTEGER_HANDLER = SerialHandler.from(Integer.class, Number::longValue, Number::intValue);
+	public static final SerialHandler<Integer, Number> PRIM_INTEGER_HANDLER = SerialHandler.from(int.class, Number::longValue, Number::intValue);
+	public static final SerialHandler<Long, Number> LONG_HANDLER = SerialHandler.from(Long.class, Number::longValue, Number::longValue);
+	public static final SerialHandler<Long, Number> PRIM_LONG_HANDLER = SerialHandler.from(long.class, Number::longValue, Number::longValue);
+	public static final SerialHandler<Float, Number> FLOAT_HANDLER = SerialHandler.from(Float.class, Number::doubleValue, Number::floatValue);
+	public static final SerialHandler<Float, Number> PRIM_FLOAT_HANDLER = SerialHandler.from(float.class, Number::doubleValue, Number::floatValue);
+	public static final SerialHandler<Double, Number> DOUBLE_HANDLER = SerialHandler.from(Double.class, Number::doubleValue, Number::doubleValue);
+	public static final SerialHandler<Double, Number> PRIM_DOUBLE_HANDLER = SerialHandler.from(double.class, Number::doubleValue, Number::doubleValue);
 	public static final SerialHandler<Character, String> CHARACTER_HANDLER = SerialHandler.from(Character.class, (c) -> c.toString(), (s) -> {
 		if (s.length() != 1) throw new IllegalArgumentException("Input is not the correct length to be a Character");
 		return s.charAt(0);
